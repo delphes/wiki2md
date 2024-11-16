@@ -1,0 +1,5 @@
+beautifulsoup4
+mdformat
+mdformat-deflist
+mdformat-tables
+requests

@@ -1,0 +1,6 @@
+reader: html
+writer: commonmark+definition_lists-raw_html
+
+wrap: none
+
+filters: [filters.lua]
