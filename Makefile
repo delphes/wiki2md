@@ -17,7 +17,7 @@ md: $(MD)
 md/%.md: html/%.html
 	@echo ">> Converting $^"
 	@$(MKDIR) $(@D)
-	@$(PANDOC) $< | sed '/^&nbsp;$$/d' > $@
+	@$(PANDOC) $< | sed '/^&nbsp;$$/d ; s/ *$$//' > $@
 	@$(FORMAT) $@
 
 clean:
