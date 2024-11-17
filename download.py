@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 base = "https://cp3.irmp.ucl.ac.be"
 
 wiki = "/projects/delphes/wiki"
+ticket = "/projects/delphes/ticket"
 source = "/projects/delphes/browser"
 attachement = "/projects/delphes/raw-attachment"
 
@@ -64,7 +65,7 @@ for p in pages:
     map[p] = f + ".html"
 
 for page, file in map.items():
-    r = requests.get(base + "/" + wiki + "/" + page)
+    r = requests.get(base + wiki + "/" + page)
     s = BeautifulSoup(r.content, "html.parser")
     d = s.find("div", {"id": "wikipage"})
     for tag in d.find_all("a", {"class": "trac-rawlink"}):
@@ -82,7 +83,7 @@ for page, file in map.items():
             del tag[attr]
     for i in d.find_all("img", attrs={"src": True}):
         src = i["src"]
-        src = re.sub(attachement + ".*/", "/etc/", src)
+        src = re.sub(attachement + ".*/", "/img/", src)
         i["src"] = src
     for a in d.find_all("a", attrs={"href": True}):
         i = a.find("img")
@@ -92,14 +93,15 @@ for page, file in map.items():
         href = a["href"].strip()
         text = a.string.strip()
         href = re.sub(base, "", href)
+        href = re.sub(ticket, base + ticket, href)
         href = re.sub(source, "$source$", href)
         href = re.sub(attachement + ".*/", "/etc/", href)
         href = re.sub(arxiv, "$arxiv$", href)
         href = re.sub(fastjet, "$fastjet$", href)
         text = text.replace(base, "")
         for p, f in map.items():
-            f = re.sub("/*index.html", "", f)
-            f = re.sub("\.html", "", f)
+            f = re.sub(r"/?index\.html", "", f)
+            f = re.sub(r"\.html", "", f)
             href = re.sub(wiki + "/" + p + "$", "/" + f, href)
             text = re.sub(wiki + "/" + p + "$", "/" + f, text)
         text = re.sub("WorkBook/", "", text)
